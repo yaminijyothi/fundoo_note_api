@@ -1,5 +1,5 @@
 package com.bridgelabz.fundoonotes.dto;
-
+/*dto class for registration*/
 import org.springframework.stereotype.Component;
 
 import lombok.Data;
