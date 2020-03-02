@@ -1,5 +1,5 @@
 package com.bridgelabz.fundoonotes.response;
-
+//http response for userdetails
 import lombok.Data;
 @Data
 public class UserDetailResponse {
@@ -7,8 +7,8 @@ public class UserDetailResponse {
  private String msg;
  private Object data;
  
- public  UserDetailResponse(String msg,Object data) {
-	// this.token=token;
+ public  UserDetailResponse(String token,String msg,Object data) {
+	this.token=token;
 	 this.msg=msg;
 	 this.data=data;
  }
@@ -30,4 +30,4 @@ public Object getRes() {
 public void setRes(Object data) {
 	this.data =data;
 }
-}
+} 

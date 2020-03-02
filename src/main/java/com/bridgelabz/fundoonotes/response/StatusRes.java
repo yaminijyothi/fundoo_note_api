@@ -1,25 +1,25 @@
 package com.bridgelabz.fundoonotes.response;
-
+//http status response class
 import lombok.Data;
 
 @Data
 public class StatusRes {
 	private String msg;
-	private int scode;
-	private Object res;
+	private int statuscode;
+	private Object obj;
 	
 	
 	
 	public StatusRes(String msg, int scode, Object res) {
 		super();
 		this.msg = msg;
-		this.scode = scode;
-		this.res = res;
+		this.statuscode = scode;
+		this.obj = res;
 	}
 	public StatusRes(String msg, int scode) {
 		super();
 		this.msg = msg;
-		this.scode = scode;
+		this.statuscode = scode;
 	}
 	public String getMsg() {
 		return msg;
@@ -28,16 +28,16 @@ public class StatusRes {
 		this.msg = msg;
 	}
 	public int getScode() {
-		return scode;
+		return statuscode;
 	}
 	public void setScode(int scode) {
-		this.scode = scode;
+		this.statuscode = scode;
 	}
 	public Object getRes() {
-		return res;
+		return obj;
 	}
 	public void setRes(Object res) {
-		this.res = res;
+		this.obj = res;
 	}
 
 }
