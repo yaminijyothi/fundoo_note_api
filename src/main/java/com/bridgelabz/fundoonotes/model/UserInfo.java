@@ -1,5 +1,5 @@
 package com.bridgelabz.fundoonotes.model;
-
+//main entity dto class for user details
 import java.time.LocalDateTime;
 
 import javax.persistence.Entity;
