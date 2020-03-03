@@ -9,10 +9,11 @@ import com.bridgelabz.fundoonotes.model.UserInfo;
 public class Mail {
 	
  public static void sending(UserInfo info, JavaMailSenderImpl sender,String token) {
+	 
 	 SimpleMailMessage msg=new SimpleMailMessage();
 	 msg.setTo(info.getEmail());
 	 msg.setSubject("regitration confirmed");
-	 msg.setText("hi "+info.getName()+"  link to verify the user:\n"+"http://localhost:8083/verify/"+token);;
+	 msg.setText("hi "+info.getName()+"  link to verify the user:\n"+"http://localhost:8083/verify/"+token);
 	 sender.send(msg);
 	 
  }
