@@ -47,7 +47,6 @@ public class ServiceImpl implements UserService{
 	@Transactional
 	public UserInfo register(RegDto data) {
 		UserInfo info = repository.getUser(data.getEmail());
-		System.out.println("*********");
 		if(info == null) {
 			UserInfo inform=(UserInfo)model.map(data,UserInfo.class);
 			inform.setDate(LocalDateTime.now());
@@ -55,8 +54,8 @@ public class ServiceImpl implements UserService{
 			inform.setPassword(enpassword);
 			inform.setIsverified(false);
 			UserInfo result = repository.register(inform);
-			JavaMailSenderImpl dataa = this.mailSender();
-			Mail.sending(inform,dataa, generator.token(inform.getUserId()));
+			JavaMailSenderImpl mail = this.mailSender();
+			Mail.sending(inform,mail, generator.token(inform.getUserId()));
 			System.out.println(generator.token(inform.getUserId()));
 			return result; 
 
@@ -101,8 +100,8 @@ public class ServiceImpl implements UserService{
 	//to get all users
 	@Override
 	public List<UserInfo> users() {
-		List<UserInfo>
-		  users=repository.users(); UserInfo user=users.get(0); 
+		List<UserInfo> users=repository.users(); 
+		UserInfo user=users.get(0); 
 		 return users;
 	
 	}
@@ -122,7 +121,7 @@ public class ServiceImpl implements UserService{
 		return sender;
 
 	}
-	
+		
 }
 	
 
