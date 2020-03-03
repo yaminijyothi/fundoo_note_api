@@ -9,14 +9,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bridgelabz.fundoonotes.dto.LoginDto;
@@ -47,7 +43,7 @@ public class UserController {
 	}
 
 	// API for login
-	@PostMapping(value = "/login")
+	@PostMapping("/login")
 	public ResponseEntity<UserDetailResponse> login(@RequestBody LoginDto data) {
 		UserInfo user = service.login(data);
 		if (user != null) {
@@ -61,7 +57,7 @@ public class UserController {
 	}
 
 	//API for verify token 
-	@PostMapping(value="/verify/{token}")
+	@GetMapping("/verify/{token}")
 	public ResponseEntity<StatusRes> verify(@PathVariable("token") String token){
 		boolean ver=service.verify(token);
 		if(ver) 
@@ -81,7 +77,7 @@ public class UserController {
 	}
 
 	//API for forgotpassword
-	@PostMapping(value="/forgetpassword") 
+	@PostMapping("/forgotpassword") 
 	public ResponseEntity<StatusRes> forgetPassword(@RequestBody LoginDto data){
 		UserInfo info=service.forgotPassword(data);
 		if(info!=null) {
@@ -90,4 +86,6 @@ public class UserController {
 		return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).body(new StatusRes("password is not changed", 400,data));
 
 	}
-}
+		
+	}
+
