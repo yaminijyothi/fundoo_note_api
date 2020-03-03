@@ -2,8 +2,6 @@ package com.bridgelabz.fundoonotes.repository;
 
 import java.util.List;
 
-import com.bridgelabz.fundoonotes.dto.LoginDto;
-import com.bridgelabz.fundoonotes.dto.RegDto;
 import com.bridgelabz.fundoonotes.model.UserInfo;
 //service repository
 public interface UserRepository {
