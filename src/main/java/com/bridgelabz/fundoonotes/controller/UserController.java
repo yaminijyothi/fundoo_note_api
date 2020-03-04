@@ -29,7 +29,7 @@ public class UserController {
 	@Autowired
 	private UserService service;
 	@Autowired                             
-	private TokenGenerator generator;
+	private TokenGenerator generator;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
 
 	// API for register
 	@PostMapping("/register")
@@ -39,8 +39,7 @@ public class UserController {
 			return ResponseEntity.status(HttpStatus.CREATED).body(new StatusRes("successfully registered", 200, data));
 		}
 		return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).body(new StatusRes("registration failed", 400, data));
-
-	}
+}
 
 	// API for login
 	@PostMapping("/login")
@@ -51,9 +50,7 @@ public class UserController {
 			return ResponseEntity.status(HttpStatus.ACCEPTED)
 					.body(new UserDetailResponse(token,"login successfully 200", data));
 		}
-
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new UserDetailResponse(null,"failed to login 400", data));
-
+     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new UserDetailResponse(null,"failed to login 400", data));
 	}
 
 	//API for verify token 
