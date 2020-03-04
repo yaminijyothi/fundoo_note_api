@@ -13,6 +13,7 @@ public interface UserRepository {
 	List<UserInfo> users();
 
 	boolean verify(int userId);
-
+	
+	UserInfo findUserById(int userId);
 
 }
