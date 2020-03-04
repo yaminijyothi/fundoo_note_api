@@ -58,6 +58,15 @@ public class Repositoryimpl implements UserRepository{
 		return false;
 
 	}
+
+	@Override
+	public UserInfo findUserById(int userId) {
+		Session session=manager.unwrap(Session.class);
+		@SuppressWarnings("unchecked")
+		Query<UserInfo> query=session.createQuery("from UserInfo where userId=:userId");
+		query.setParameter("userId", userId);
+		return (UserInfo)query.uniqueResult();
+	}
 }
 
 
