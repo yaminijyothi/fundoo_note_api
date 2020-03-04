@@ -1,12 +1,14 @@
 package com.bridgelabz.fundoonotes.model;
 //main entity dto class for user details
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.OneToMany;
 
 @Entity
 public class UserInfo {
@@ -20,6 +22,9 @@ public class UserInfo {
 	private boolean isverified;
 	private LocalDateTime date;
 	
+	/*
+	 * @OneToMany(mappedBy ="info") private List<Notes> notes=new ArrayList<>();
+	 */
 	public int getUserId() {
 		return userId;
 	}
