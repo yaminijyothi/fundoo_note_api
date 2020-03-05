@@ -82,8 +82,6 @@ public class NoteImpl implements NoteService{
 	//to delete notes 
 	@Override
 	public Notes deleteNote(long NoteId, String token) {
-		int userId=generator.jwt(token);
-		UserInfo info=repository.findUserById(userId);
 		Notes note=noterepository.findNoteById(NoteId);
 		if(note!=null) {
 			note.setIsTrashed(1);
