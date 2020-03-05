@@ -1,30 +1,28 @@
 package com.bridgelabz.fundoonotes.repository;
-//service repository implementation
+
 import java.util.List;
 
 import javax.persistence.EntityManager;
 
-
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.stereotype.Repository;
+
 import com.bridgelabz.fundoonotes.model.UserInfo;
 @Repository
-public class Repositoryimpl implements UserRepository{
+public class RepositoryImpl implements UserRepository {
 
 	@Autowired
 	private EntityManager manager;
-
 	//**query for save the user data
 	@Override
 	public UserInfo register(UserInfo info) {
 		Session session=manager.unwrap(Session.class);
 		session.saveOrUpdate(info);
 		return  info;
+		
 	}
-
 	//**query to find  user information from user email
 	@Override
 	public UserInfo getUser(String email) {
@@ -33,8 +31,8 @@ public class Repositoryimpl implements UserRepository{
 		Query<UserInfo> query=session.createQuery("from UserInfo where email=:email");
 		query.setParameter("email",email);
 		return (UserInfo)query.uniqueResult();
+		
 	}
-	
 	//**query to get all users
 	@Override
 	public List<UserInfo> users() {
@@ -42,8 +40,8 @@ public class Repositoryimpl implements UserRepository{
 		@SuppressWarnings("unchecked")
 		List<UserInfo> list=session.createQuery("from UserInfo").getResultList();
 		return list;
+	
 	}
-
 	//**query to verify user
 	@Override
 	public boolean verify(int userId) {
@@ -56,7 +54,7 @@ public class Repositoryimpl implements UserRepository{
 			return true;
 		}
 		return false;
-
+		
 	}
 
 	@Override
@@ -68,6 +66,3 @@ public class Repositoryimpl implements UserRepository{
 		return (UserInfo)query.uniqueResult();
 	}
 }
-
-
-
