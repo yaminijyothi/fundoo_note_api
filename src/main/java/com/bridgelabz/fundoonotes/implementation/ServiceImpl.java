@@ -101,8 +101,7 @@ public class ServiceImpl implements UserService{
 	@Override
 	public List<UserInfo> users() {
 		List<UserInfo> users=repository.users(); 
-		UserInfo user=users.get(0); 
-		 return users;
+		return users;
 	
 	}
 	
