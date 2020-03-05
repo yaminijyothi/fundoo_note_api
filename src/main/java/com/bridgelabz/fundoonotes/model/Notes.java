@@ -1,11 +1,13 @@
 package com.bridgelabz.fundoonotes.model;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import lombok.Data;
 @Entity
@@ -27,6 +29,10 @@ public class Notes {
 	@ManyToOne
 	private UserInfo info;
 	
+	@ManyToMany(targetEntity = Lables.class)
+	private List<Lables> lable;
+	
+	
 	public long getNoteId() {
 		return noteId;
 	}
@@ -38,6 +44,12 @@ public class Notes {
 	}
 	public void setInfo(UserInfo info) {
 		this.info = info;
+	}
+	public List<Lables> getLable() {
+		return lable;
+	}
+	public void setLable(List<Lables> lable) {
+		this.lable = lable;
 	}
 	public String getTitle() {
 		return title;
