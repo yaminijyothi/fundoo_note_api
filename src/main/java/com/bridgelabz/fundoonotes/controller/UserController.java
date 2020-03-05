@@ -38,7 +38,7 @@ public class UserController {
 		if (info!=null) {
 			return ResponseEntity.status(HttpStatus.CREATED).body(new StatusRes("successfully registered", 200, data));
 		}
-		return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).body(new StatusRes("registration failed", 400, data));
+		return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).body(new StatusRes("user already existed", 400, data));
 }
 
 	// API for login
@@ -59,7 +59,7 @@ public class UserController {
 		boolean ver=service.verify(token);
 		if(ver) 
 		{
-			return ResponseEntity.status(HttpStatus.ACCEPTED).body(new StatusRes("verified",200));
+			return ResponseEntity.status(HttpStatus.ACCEPTED).body(new StatusRes("verified",200,ver));
 		}
 		return	ResponseEntity.status(HttpStatus.ACCEPTED).body(new StatusRes("not verified",400)); 
 	}
