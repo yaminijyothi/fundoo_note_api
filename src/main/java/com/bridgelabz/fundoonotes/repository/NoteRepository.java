@@ -4,9 +4,10 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
 import com.bridgelabz.fundoonotes.model.Notes;
-
+@Repository
 public interface NoteRepository extends CrudRepository<Notes, Long> {
 	@Query(value=" select * from notes where note_id=?",nativeQuery = true)
 	 Notes findNoteById(long noteId);
