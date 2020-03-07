@@ -15,8 +15,7 @@ public interface LableRepository extends CrudRepository<Lables, Long>{
 	 Lables findLableById(long LableId);
 	@Query(value="select * from lables where user_id =?",nativeQuery = true)
 	List<Lables> findLableByUserId(int id);
-	@Query(value="from notes  where info_user_id=?",nativeQuery=true)
-	List<Notes> getAllNotes(long lableId);
-	
+	@Query(value="select * from notes  where info_user_id=?",nativeQuery=true)
+	List<Notes> getAllNotes(long lableId);	
 
 }
