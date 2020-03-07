@@ -18,6 +18,7 @@ public class Lables {
 	private long lableId;
 	private String name;
 	private int userId;
+	
 	@ManyToMany()
 	private List<Notes> notesList;
 	
