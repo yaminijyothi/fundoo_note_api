@@ -14,10 +14,6 @@ public class UserConfiguration {
 		return new BCryptPasswordEncoder();
 	    
 	}
-	@Bean                                   
-	public ModelMapper modelMapper() {
-		return new ModelMapper();
-	}
 	@Bean
 	public JavaMailSenderImpl sender() {
 		return new JavaMailSenderImpl();

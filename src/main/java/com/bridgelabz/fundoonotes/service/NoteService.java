@@ -14,6 +14,7 @@ public interface NoteService {
 	List<Notes> getAllNotes();
 	List<Notes> getNoteByUserId(String token);
 	Notes getNote(long noteId);
+	List<Notes> getTrashed(String token);
 	
 }
 

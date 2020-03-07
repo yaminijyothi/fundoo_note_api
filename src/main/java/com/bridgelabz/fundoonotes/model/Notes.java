@@ -29,80 +29,10 @@ public class Notes {
 	@ManyToOne
 	private UserInfo info;
 	
-	@ManyToMany(targetEntity = Lables.class)
+	@ManyToMany(mappedBy="notesList")
 	private List<Lables> lable;
 	
 	
-	public long getNoteId() {
-		return noteId;
+	
 	}
-	public void setNoteId(long noteId) {
-		this.noteId = noteId;
-	}
-	public int getInfo() {
-		return info.getUserId();
-	}
-	public void setInfo(UserInfo info) {
-		this.info = info;
-	}
-	public List<Lables> getLable() {
-		return lable;
-	}
-	public void setLable(List<Lables> lable) {
-		this.lable = lable;
-	}
-	public String getTitle() {
-		return title;
-	}
-	public void setTitle(String title) {
-		this.title = title;
-	}
-	public String getDescription() {
-		return description;
-	}
-	public void setDescription(String description) {
-		this.description = description;
-	}
-	public int getIsArchieved() {
-		return isArchieved;
-	}
-	public void setIsArchieved(int isArchieved) {
-		this.isArchieved = isArchieved;
-	}
-	public int getIsPinned() {
-		return isPinned;
-	}
-	public void setIsPinned(int isPinned) {
-		this.isPinned = isPinned;
-	}
-	public int getIsTrashed() {
-		return isTrashed;
-	}
-	public void setIsTrashed(int isTrashed) {
-		this.isTrashed = isTrashed;
-	}
-	public String getColour() {
-		return colour;
-	}
-	public void setColour(String colour) {
-		this.colour = colour;
-	}
-	public LocalDateTime getDateAndTime() {
-		return dateAndTime;
-	}
-	public void setDateAndTime(LocalDateTime dateAndTime) {
-		this.dateAndTime = dateAndTime;
-	}
-	public LocalDateTime getUpdateDate() {
-		return updateDate;
-	}
-	public void setUpdateDate(LocalDateTime updateDate) {
-		this.updateDate = updateDate;
-	}
-	public LocalDateTime getReminder() {
-		return reminder;
-	}
-	public void setReminder(LocalDateTime reminder) {
-		this.reminder = reminder;
-	}
-}
+

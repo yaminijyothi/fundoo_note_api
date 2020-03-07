@@ -2,17 +2,18 @@ package com.bridgelabz.fundoonotes.implementation;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.transaction.Transactional;
 
-import org.modelmapper.ModelMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bridgelabz.fundoonotes.dto.LableDto;
 import com.bridgelabz.fundoonotes.model.Lables;
+import com.bridgelabz.fundoonotes.model.Notes;
 import com.bridgelabz.fundoonotes.model.UserInfo;
 import com.bridgelabz.fundoonotes.repository.LableRepository;
+import com.bridgelabz.fundoonotes.repository.NoteRepository;
 import com.bridgelabz.fundoonotes.repository.UserRepository;
 import com.bridgelabz.fundoonotes.service.LableService;
 import com.bridgelabz.fundoonotes.utility.TokenGenerator;
@@ -25,7 +26,7 @@ public class LableImpl implements LableService{
 	@Autowired
 	private LableRepository lableRepo;
 	@Autowired
-	private  ModelMapper model;
+	private NoteRepository noteRepo;
 
 	//to create lables
 	@Override
@@ -34,7 +35,8 @@ public class LableImpl implements LableService{
 		int id=generator.jwt(token);
 		UserInfo info=repository.findUserById(id);
 		if(info!=null) {
-			Lables lab=model.map(data, Lables.class);
+			Lables lab=new Lables();
+			//BeanUtils.copyProperties(data, lab);
 			lab.setName(data.getName());
 			lab.setUserId(id);
 			Lables result = lableRepo.save(lab);
@@ -47,11 +49,12 @@ public class LableImpl implements LableService{
 	//to update lables
 	@Override
 	@Transactional
-	public Lables updateLable(LableDto data, String token) {
+	public Lables updateLable(LableDto data, String token,long lableId) {
 		int id=generator.jwt(token);
 		UserInfo info=repository.findUserById(id);
 		if(info!=null) {
-			Lables lab=model.map(data, Lables.class);
+			Lables lab=new Lables();
+			BeanUtils.copyProperties(token, lab);
 			lab.setName(data.getName());
 			Lables result = lableRepo.save(lab);
 			return result;
@@ -101,5 +104,84 @@ public class LableImpl implements LableService{
 		Lables lab=lableRepo.findLableById(LableId);
 		return lab;
 	}
+	/*
+	 * // //// @Override //// public List<Lables> notesOfLable(LableDto data, String
+	 * token) { //// int id=generator.jwt(token); //// UserInfo
+	 * info=repository.findUserById(id); //// if(info!=null) { //// Lables
+	 * lab=model.map(data, Lables.class); //// lab.setUserId(info.getUserId()); ////
+	 * lableRepo.save(lab); //// List<Notes> note=noteRepo.findNoteByUserId(id);
+	 * //// } //// return null; //// }
+	 */
+//	@Override
+//	public Notes addNotesToLable(String token, long lableId, NoteDto data) {
+//		int id=generator.jwt(token);
+//		UserInfo info=repository.findUserById(id);
+//		if(info!=null) {
+//			List<Lables> lables=lableRepo.findLableByUserId(id);
+//			if(lables!=null) {
+//				Lables lab=lableRepo.findLableById(lableId);
+//				if(lab!=null) {
+//					Notes note=model.map(data,Notes.class);
+//					note.setTitle(data.getTitle());
+//					note.setDescription(data.getDescription());
+//					note.setIsArchieved(0);
+//					note.setIsPinned(0);
+//					note.setIsTrashed(0);
+//					note.setDateAndTime(LocalDateTime.now());
+//					note.setColour(null);
+//					note.setInfo(info);
+//			       Notes result = noteRepo.save(note);
+//					
+//				  return result;
+//				   
+//				
+//				}
+//				
+//				
+//			}
+//		}
+//		return null;
+//	}
 
+	@Override
+	public Lables addLable(long lableId, long noteId, String token) {
+		int id=generator.jwt(token);
+		UserInfo info=repository.findUserById(id);
+		if(info!=null) {
+			
+			Notes notes =noteRepo.findNoteById(noteId);
+			Lables lable=lableRepo.findLableById(lableId);
+			lable.getNotesList().add(notes);
+			lableRepo.save(lable); 
+		return lable;
+	}
+		return null;
+	}
+
+	@Override
+	public List<Notes> getNotes(String token, long lableId) {
+		int id=generator.jwt(token);
+		UserInfo info=repository.findUserById(id);
+		if(info!=null) {
+			Lables lable=lableRepo.findLableById(lableId);
+			if(lable!=null) {
+				List<Notes> notes=lableRepo.getAllNotes(lableId);
+				return notes;
+			}
+		}
+		return null;
+	}
 }
+
+//	@Override
+//	public List<Lables> getNotes(String token, Long lableId) {
+
+//		if(info!=null) {
+//			Lables lab=lableRepo.findLableById(lableId);
+//			if(lab!=null) {
+//				//List<Notes> notes=lableRepo.
+//			}
+//		}
+//		return null;
+//	}
+

@@ -13,6 +13,8 @@ public interface NoteRepository extends CrudRepository<Notes, Long> {
 	 Notes findNoteById(long noteId);
 	@Query(value="select * from notes where info_user_id =?",nativeQuery = true)
 	List<Notes> findNoteByUserId(int  id);
+	@Query(value="select * from notes where is_trashed=1",nativeQuery=true)
+	List<Notes> getTrashed(int id);
  
 
 }

@@ -8,7 +8,7 @@ import java.util.Properties;
 
 import javax.transaction.Transactional;
 
-import org.modelmapper.ModelMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -32,8 +32,6 @@ public class ServiceImpl implements UserService{
 	@Autowired
 	private UserRepository repository;
 	@Autowired
-	private ModelMapper model;
-	@Autowired
 	private BCryptPasswordEncoder encrypt;
 	@Autowired
 	private TokenGenerator generator;
@@ -46,19 +44,19 @@ public class ServiceImpl implements UserService{
 	//for user registration
 	@Transactional
 	public UserInfo register(RegDto data) {
-		UserInfo info = repository.getUser(data.getEmail());
-		if(info == null) {
-			UserInfo inform=(UserInfo)model.map(data,UserInfo.class);
-			inform.setDate(LocalDateTime.now());
+		UserInfo user = repository.getUser(data.getEmail());
+		if(user==null) {
+		UserInfo info=new UserInfo();
+			BeanUtils.copyProperties(data,info);
+			info.setDate(LocalDateTime.now());
 			String enpassword=encrypt.encode(data.getPassword());    
-			inform.setPassword(enpassword);
-			inform.setIsverified(false);
-			UserInfo result = repository.register(inform);
+			info.setPassword(enpassword);
+			info.setIsverified(false);
+			UserInfo result = repository.register(info);
 			JavaMailSenderImpl mail = this.mailSender();
-			Mail.sending(inform,mail, generator.token(inform.getUserId()));
-			System.out.println(generator.token(inform.getUserId()));
-			return result; 
-
+			Mail.sending(info,mail, generator.token(info.getUserId()));
+			System.out.println(generator.token(info.getUserId()));
+			return info;
 		}
 		return null;
 	}
@@ -68,7 +66,7 @@ public class ServiceImpl implements UserService{
 	public UserInfo login(LoginDto data) {
 		UserInfo info=repository.getUser(data.getEmail());
 		if(info!=null) {
-			if((info.getIsverified()==true)&&(encrypt.matches(data.getPassword(), info.getPassword()))) {
+			if((info.isIsverified()==true)&&(encrypt.matches(data.getPassword(), info.getPassword()))) {
 				System.out.println(generator.token(info.getUserId()));
 				return info;
 			}
@@ -90,11 +88,10 @@ public class ServiceImpl implements UserService{
 	public UserInfo forgotPassword(LoginDto data) {
 		UserInfo info=repository.getUser(data.getEmail());
 		if(info!=null) {
-			UserInfo inform=model.map(data, UserInfo.class);
-			inform.setPassword(config.passwordEncoder().encode(inform.getPassword()));
-			return repository.register(inform);
-
-		}
+			BeanUtils.copyProperties(data, info);
+			info.setPassword(config.passwordEncoder().encode(info.getPassword()));
+			return repository.register(info);
+        }
 		return null;
 	}
 	//to get all users

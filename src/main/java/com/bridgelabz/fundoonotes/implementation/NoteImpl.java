@@ -6,6 +6,7 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,8 +25,6 @@ public class NoteImpl implements NoteService{
 	@Autowired
 	private UserRepository repository;
 	@Autowired
-	private ModelMapper model;
-	@Autowired
 	private TokenGenerator generator;
 
 	//to add notes
@@ -35,7 +34,8 @@ public class NoteImpl implements NoteService{
 		int id=generator.jwt(token);
 		UserInfo info = repository.findUserById(id);
 		if(info!=null) {
-			Notes note=(Notes)model.map(data,Notes.class);
+			Notes note=new Notes();
+			BeanUtils.copyProperties(data, note);
 			note.setTitle(data.getTitle());
 			note.setDescription(data.getDescription());
 			note.setIsArchieved(0);
@@ -43,7 +43,7 @@ public class NoteImpl implements NoteService{
 			note.setColour("null");
 			note.setReminder(null);
 			note.setDateAndTime(LocalDateTime.now());
-			note.setInfo(info);
+		//	note.setInfo(info);
 			Notes result = noterepository.save(note);
 			return result;
 		}
@@ -56,7 +56,8 @@ public class NoteImpl implements NoteService{
 		int id=generator.jwt(token);
 		UserInfo info = repository.findUserById(id);
 		if(info!=null) {
-			Notes note=model.map(data,Notes.class);
+			Notes note=new Notes();
+			BeanUtils.copyProperties(data, note);
 			note.setColour(data.getColour());
 			note.setDescription(data.getDescription());
 			note.setIsArchieved(data.getIsArchieved());
@@ -109,5 +110,15 @@ public class NoteImpl implements NoteService{
 	public Notes getNote(long noteId) {
 		Notes note=noterepository.findNoteById(noteId);
 		return note;
+	}
+	@Override
+	public List<Notes> getTrashed(String token) {
+		int userId=generator.jwt(token);
+		List<Notes> notes=noterepository.findNoteByUserId(userId);
+		if(notes!=null) {
+			List<Notes> list=noterepository.getTrashed(userId);
+			return list;
+		}
+		return null;
 	}
 }

@@ -2,6 +2,7 @@ package com.bridgelabz.fundoonotes.repository;
 
 import java.util.List;
 
+import com.bridgelabz.fundoonotes.model.Notes;
 import com.bridgelabz.fundoonotes.model.UserInfo;
 //service repository
 public interface UserRepository {
@@ -15,5 +16,7 @@ public interface UserRepository {
 	boolean verify(int userId);
 	
 	UserInfo findUserById(int userId);
+
+
 
 }

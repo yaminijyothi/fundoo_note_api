@@ -10,34 +10,15 @@ public class StatusRes {
 	
 	
 	
-	public StatusRes(String msg, int scode, Object res) {
+	public StatusRes(String msg, int scode, Object obj) {
 		super();
 		this.msg = msg;
 		this.statuscode = scode;
-		this.obj = res;
+		this.obj = obj;
 	}
 	public StatusRes(String msg, int scode) {
 		super();
 		this.msg = msg;
 		this.statuscode = scode;
 	}
-	public String getMsg() {
-		return msg;
-	}
-	public void setMsg(String msg) {
-		this.msg = msg;
-	}
-	public int getScode() {
-		return statuscode;
-	}
-	public void setScode(int scode) {
-		this.statuscode = scode;
-	}
-	public Object getRes() {
-		return obj;
-	}
-	public void setRes(Object res) {
-		this.obj = res;
-	}
-
 }

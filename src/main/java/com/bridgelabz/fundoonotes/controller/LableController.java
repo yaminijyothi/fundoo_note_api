@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bridgelabz.fundoonotes.dto.LableDto;
+import com.bridgelabz.fundoonotes.dto.NoteDto;
 import com.bridgelabz.fundoonotes.model.Lables;
+import com.bridgelabz.fundoonotes.model.Notes;
 import com.bridgelabz.fundoonotes.response.StatusRes;
 import com.bridgelabz.fundoonotes.service.LableService;
 @RestController
@@ -28,17 +30,17 @@ public class LableController {
 	
 	
 	//API for creating lables
-	@PostMapping("lable/addLable/{token}")
-	public ResponseEntity<StatusRes> addLable(@RequestBody LableDto data,@PathVariable("token") String token){
+	@PostMapping("lable/createLable/{token}")
+	public ResponseEntity<StatusRes> createLable(@RequestBody LableDto data,@PathVariable("token") String token){
 		Lables lab=service.createLable(data, token);
 			return ResponseEntity.status(HttpStatus.CREATED).body(new StatusRes("lable created",200,lab));
 	}
 
 
 	//API for update the lable
-	@PutMapping("lable/updateLable/{token}")
-	public ResponseEntity<StatusRes> updateLable(@RequestBody LableDto data,@PathVariable("token")String token){
-		Lables lab=service.updateLable(data, token);
+	@PutMapping("lable/updateLable/{token}/{lableId}")
+	public ResponseEntity<StatusRes> updateLable(@RequestBody LableDto data,@PathVariable("token")String token,@PathVariable("lableId")long lableId){
+		Lables lab=service.updateLable(data, token,lableId);
 		
 			return ResponseEntity.status(HttpStatus.CREATED).body(new StatusRes("lable updated",200,lab));
 	}
@@ -66,11 +68,23 @@ public class LableController {
 	}
   
   //API for getting single lable
-  @GetMapping("lable/getLable/{LableId}")
+  @GetMapping("lable/getSingleLable/{LableId}")
   public ResponseEntity<StatusRes> getLable(@PathVariable("LableId")long LableId){
 	  Lables lab=service.getLable(LableId);
 	  	return ResponseEntity.status(HttpStatus.CREATED).body(new StatusRes("single lable",200,lab));
   }
+  
+  @GetMapping("lable/getLableMap/{lableId}/{noteId}/{token}")
+  public ResponseEntity<StatusRes> addLable(@PathVariable("lableId")long lableId,@PathVariable("noteId")long  noteId,@PathVariable("token")String token){
+	  Lables lab=service.addLable(lableId,noteId,token);
+	  	return ResponseEntity.status(HttpStatus.CREATED).body(new StatusRes("single lable",200,lab));
+  }
+  @GetMapping("lable/getNotesOfLable/{token}/{lableId}")
+  public ResponseEntity<StatusRes>  getNotesbyLableId(@PathVariable("token")String token,@PathVariable("lableId")long lableId){
+	  List<Notes> list=service.getNotes(token,lableId);
+	  return ResponseEntity.status(HttpStatus.CREATED).body(new StatusRes("single lable",200,list));
+  }
+  
 }
 
 

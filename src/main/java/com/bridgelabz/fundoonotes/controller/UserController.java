@@ -36,9 +36,9 @@ public class UserController {
 	public ResponseEntity<StatusRes> register(@RequestBody RegDto data) {
 		UserInfo info = service.register(data);
 		if (info!=null) {
-			return ResponseEntity.status(HttpStatus.CREATED).body(new StatusRes("successfully registered", 200, data));
+			return ResponseEntity.status(HttpStatus.CREATED).body(new StatusRes("successfully registered", 200, info));
 		}
-		return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).body(new StatusRes("user already existed", 400, data));
+		return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).body(new StatusRes("user already existed", 400));
 }
 
 	// API for login
@@ -46,11 +46,11 @@ public class UserController {
 	public ResponseEntity<UserDetailResponse> login(@RequestBody LoginDto data) {
 		UserInfo user = service.login(data);
 		if (user != null) {
-			String token = generator.token(user.getUserId());
+		   String token = generator.token(user.getUserId());
 			return ResponseEntity.status(HttpStatus.ACCEPTED)
-					.body(new UserDetailResponse(token,"login successfully 200", data));
+					.body(new UserDetailResponse(token,"login successfully 200", user));
 		}
-     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new UserDetailResponse(null,"failed to login 400", data));
+     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new UserDetailResponse(null,"failed to login 400",data));
 	}
 
 	//API for verify token 
@@ -85,4 +85,5 @@ public class UserController {
 	}
 		
 	}
+
 
