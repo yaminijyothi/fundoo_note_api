@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bridgelabz.fundoonotes.dto.LableDto;
+import com.bridgelabz.fundoonotes.exception.UserException;
 import com.bridgelabz.fundoonotes.model.Lables;
 import com.bridgelabz.fundoonotes.model.Notes;
 import com.bridgelabz.fundoonotes.model.UserInfo;
@@ -32,50 +33,37 @@ public class LableImpl implements LableService{
 	@Override
 	@Transactional
 	public Lables createLable(LableDto data, String token) {
-		int id=generator.jwt(token);
-		UserInfo info=repository.findUserById(id);
-		if(info!=null) {
-			Lables lab=new Lables();
-			//BeanUtils.copyProperties(data, lab);
-			lab.setName(data.getName());
-			lab.setUserId(id);
-			Lables result = lableRepo.save(lab);
-			return result;
-
+		try {
+			int id=generator.jwt(token);
+			UserInfo info=repository.findUserById(id);
+			if(info!=null) {
+				Lables lab=new Lables();
+				BeanUtils.copyProperties(data, lab);
+				lab.setName(data.getName());
+				lab.setUserId(id);
+				Lables result = lableRepo.save(lab);
+				return result;
+			}
+		}catch(Exception e) {
+			throw new UserException("user does not exist with this id");
 		}
 		return null;
 	}
-
-	//to update lables
-	@Override
-	@Transactional
-	public Lables updateLable(LableDto data, String token,long lableId) {
-		int id=generator.jwt(token);
-		UserInfo info=repository.findUserById(id);
-		if(info!=null) {
-			Lables lab=new Lables();
-			BeanUtils.copyProperties(token, lab);
-			lab.setName(data.getName());
-			Lables result = lableRepo.save(lab);
-			return result;
-		}
-		return null;
-	}
-
 
 	//to delete lables
 	@Override
 	@Transactional
 	public Lables deleteLable(long LableId, String token) {
-		Lables lab=lableRepo.findLableById(LableId);
-		if(lab!=null) {
-			lableRepo.delete(lab);
-			return lab;
+		try {
+			Lables lab=lableRepo.findLableById(LableId);
+			if(lab!=null) {
+				lableRepo.delete(lab);
+			}
+		}catch(Exception e) {
+			throw new UserException("lable does not exist with that id");
 		}
-
 		return null;
 	}
-
 
 	//to get all lables of all users
 	@Override
@@ -86,7 +74,6 @@ public class LableImpl implements LableService{
 		return lables;
 	}
 
-
 	//to get lables by userId
 	@Override
 	@Transactional
@@ -96,7 +83,6 @@ public class LableImpl implements LableService{
 		return lab;
 	}
 
-
 	//to get a single lable
 	@Override
 	@Transactional
@@ -104,61 +90,31 @@ public class LableImpl implements LableService{
 		Lables lab=lableRepo.findLableById(LableId);
 		return lab;
 	}
-	/*
-	 * // //// @Override //// public List<Lables> notesOfLable(LableDto data, String
-	 * token) { //// int id=generator.jwt(token); //// UserInfo
-	 * info=repository.findUserById(id); //// if(info!=null) { //// Lables
-	 * lab=model.map(data, Lables.class); //// lab.setUserId(info.getUserId()); ////
-	 * lableRepo.save(lab); //// List<Notes> note=noteRepo.findNoteByUserId(id);
-	 * //// } //// return null; //// }
-	 */
-//	@Override
-//	public Notes addNotesToLable(String token, long lableId, NoteDto data) {
-//		int id=generator.jwt(token);
-//		UserInfo info=repository.findUserById(id);
-//		if(info!=null) {
-//			List<Lables> lables=lableRepo.findLableByUserId(id);
-//			if(lables!=null) {
-//				Lables lab=lableRepo.findLableById(lableId);
-//				if(lab!=null) {
-//					Notes note=model.map(data,Notes.class);
-//					note.setTitle(data.getTitle());
-//					note.setDescription(data.getDescription());
-//					note.setIsArchieved(0);
-//					note.setIsPinned(0);
-//					note.setIsTrashed(0);
-//					note.setDateAndTime(LocalDateTime.now());
-//					note.setColour(null);
-//					note.setInfo(info);
-//			       Notes result = noteRepo.save(note);
-//					
-//				  return result;
-//				   
-//				
-//				}
-//				
-//				
-//			}
-//		}
-//		return null;
-//	}
 
+	//add  notes to lables
 	@Override
+	@Transactional
 	public Lables addLable(long lableId, long noteId, String token) {
+
 		int id=generator.jwt(token);
 		UserInfo info=repository.findUserById(id);
 		if(info!=null) {
-			
-			Notes notes =noteRepo.findNoteById(noteId);
-			Lables lable=lableRepo.findLableById(lableId);
-			lable.getNotesList().add(notes);
-			lableRepo.save(lable); 
-		return lable;
-	}
+			try {
+				Notes notes =noteRepo.findNoteById(noteId);
+				Lables lable=lableRepo.findLableById(lableId);
+				lable.getNotesList().add(notes);
+				lableRepo.save(lable); 
+				return lable;
+			}catch(Exception e) {
+				throw new UserException("lable is not exist with that id");
+			}
+		}
 		return null;
 	}
 
+	// getting notes by lable id
 	@Override
+	@Transactional
 	public List<Notes> getNotes(String token, long lableId) {
 		int id=generator.jwt(token);
 		UserInfo info=repository.findUserById(id);
@@ -172,16 +128,3 @@ public class LableImpl implements LableService{
 		return null;
 	}
 }
-
-//	@Override
-//	public List<Lables> getNotes(String token, Long lableId) {
-
-//		if(info!=null) {
-//			Lables lab=lableRepo.findLableById(lableId);
-//			if(lab!=null) {
-//				//List<Notes> notes=lableRepo.
-//			}
-//		}
-//		return null;
-//	}
-
