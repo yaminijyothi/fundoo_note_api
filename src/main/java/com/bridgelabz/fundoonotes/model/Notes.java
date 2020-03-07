@@ -32,14 +32,6 @@ public class Notes {
 	private LocalDateTime dateAndTime;
 	private LocalDateTime updateDate;
 	private	LocalDateTime reminder;
-//	
-//	@ManyToOne
-//	private UserInfo info;
-//	
-//	@ManyToMany(mappedBy="notesList")
-//	private List<Lables> lable;
-//	
-//	
 	
 	}
 
