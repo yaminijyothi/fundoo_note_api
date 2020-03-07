@@ -27,64 +27,51 @@ import com.bridgelabz.fundoonotes.service.LableService;
 public class LableController {
 	@Autowired
 	private LableService service;
-	
-	
+
+
 	//API for creating lables
 	@PostMapping("lable/createLable/{token}")
 	public ResponseEntity<StatusRes> createLable(@RequestBody LableDto data,@PathVariable("token") String token){
 		Lables lab=service.createLable(data, token);
-			return ResponseEntity.status(HttpStatus.CREATED).body(new StatusRes("lable created",200,lab));
+		return ResponseEntity.status(HttpStatus.CREATED).body(new StatusRes("lable created",200,lab));
 	}
-
-
-	//API for update the lable
-	@PutMapping("lable/updateLable/{token}/{lableId}")
-	public ResponseEntity<StatusRes> updateLable(@RequestBody LableDto data,@PathVariable("token")String token,@PathVariable("lableId")long lableId){
-		Lables lab=service.updateLable(data, token,lableId);
-		
-			return ResponseEntity.status(HttpStatus.CREATED).body(new StatusRes("lable updated",200,lab));
-	}
-
 	//API for deleting lable
 	@DeleteMapping("lable/deleteLable/{LableId}/{token}")
 	public ResponseEntity<StatusRes> deleteLable(@PathVariable("LableId")long LableId,@PathVariable("token")String token){
-		Lables lab=service.deleteLable(LableId, token);
-			return ResponseEntity.status(HttpStatus.OK).body(new StatusRes("lable deleted",200,lab));
+		service.deleteLable(LableId, token);
+		return ResponseEntity.status(HttpStatus.OK).body(new StatusRes("lable deleted",200));
 	}
-
 	//API for getting all lables
 	@GetMapping("lable/getAllLables")
 	public  ResponseEntity<StatusRes> getAllLables() {
 		List<Lables> lab=service.getAllLables();
-			return ResponseEntity.status(HttpStatus.OK).body(new StatusRes("all Lables are",200,lab));
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new StatusRes("all Lables are",200,lab));
 	}
-
-	
 	//API for getting lable by userId
-  @GetMapping("lable/getLablebyUserId/{token}")
+	@GetMapping("lable/getLablebyUserId/{token}")
 	public ResponseEntity<StatusRes> getLableUserId(@PathVariable("token")String token){
 		List<Lables> lab=service.getLableByUserId(token);
-			return ResponseEntity.status(HttpStatus.CREATED).body(new StatusRes("lables of given user",200,lab));
+		return ResponseEntity.status(HttpStatus.CREATED).body(new StatusRes("lables of given user",200,lab));
 	}
-  
-  //API for getting single lable
-  @GetMapping("lable/getSingleLable/{LableId}")
-  public ResponseEntity<StatusRes> getLable(@PathVariable("LableId")long LableId){
-	  Lables lab=service.getLable(LableId);
-	  	return ResponseEntity.status(HttpStatus.CREATED).body(new StatusRes("single lable",200,lab));
-  }
-  
-  @GetMapping("lable/getLableMap/{lableId}/{noteId}/{token}")
-  public ResponseEntity<StatusRes> addLable(@PathVariable("lableId")long lableId,@PathVariable("noteId")long  noteId,@PathVariable("token")String token){
-	  Lables lab=service.addLable(lableId,noteId,token);
-	  	return ResponseEntity.status(HttpStatus.CREATED).body(new StatusRes("single lable",200,lab));
-  }
-  @GetMapping("lable/getNotesOfLable/{token}/{lableId}")
-  public ResponseEntity<StatusRes>  getNotesbyLableId(@PathVariable("token")String token,@PathVariable("lableId")long lableId){
-	  List<Notes> list=service.getNotes(token,lableId);
-	  return ResponseEntity.status(HttpStatus.CREATED).body(new StatusRes("single lable",200,list));
-  }
-  
+	//API for getting single lable
+	@GetMapping("lable/getSingleLable/{LableId}")
+	public ResponseEntity<StatusRes> getLable(@PathVariable("LableId")long LableId){
+		Lables lab=service.getLable(LableId);
+		return ResponseEntity.status(HttpStatus.CREATED).body(new StatusRes("single lable",200,lab));
+	}
+	//API for mappping the notes and lables
+	@GetMapping("lable/getLableMap/{lableId}/{noteId}/{token}")
+	public ResponseEntity<StatusRes> addLable(@PathVariable("lableId")long lableId,@PathVariable("noteId")long  noteId,@PathVariable("token")String token){
+		Lables lab=service.addLable(lableId,noteId,token);
+		return ResponseEntity.status(HttpStatus.CREATED).body(new StatusRes("single lable",200,lab));
+	}
+	//API for getting notes of lable
+	@GetMapping("lable/getNotesOfLable/{token}/{lableId}")
+	public ResponseEntity<StatusRes>  getNotesbyLableId(@PathVariable("token")String token,@PathVariable("lableId")long lableId){
+		List<Notes> list=service.getNotes(token,lableId);
+		return ResponseEntity.status(HttpStatus.CREATED).body(new StatusRes("single lable",200,list));
+	}
+
 }
 
 
