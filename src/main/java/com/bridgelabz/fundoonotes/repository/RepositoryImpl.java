@@ -56,7 +56,7 @@ public class RepositoryImpl implements UserRepository {
 		return false;
 		
 	}
-
+    //**query to finding  user by id
 	@Override
 	public UserInfo findUserById(int userId) {
 		Session session=manager.unwrap(Session.class);
