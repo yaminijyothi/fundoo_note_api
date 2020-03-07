@@ -17,15 +17,12 @@ import org.springframework.stereotype.Service;
 import com.bridgelabz.fundoonotes.configuration.UserConfiguration;
 import com.bridgelabz.fundoonotes.dto.LoginDto;
 import com.bridgelabz.fundoonotes.dto.RegDto;
+import com.bridgelabz.fundoonotes.exception.UserException;
 import com.bridgelabz.fundoonotes.model.UserInfo;
 import com.bridgelabz.fundoonotes.repository.UserRepository;
 import com.bridgelabz.fundoonotes.service.UserService;
 import com.bridgelabz.fundoonotes.utility.Mail;
 import com.bridgelabz.fundoonotes.utility.TokenGenerator;
-
-
-
-
 @Service
 public class ServiceImpl implements UserService{
 
@@ -64,12 +61,16 @@ public class ServiceImpl implements UserService{
 	@Override
 	@Transactional
 	public UserInfo login(LoginDto data) {
+		try {
 		UserInfo info=repository.getUser(data.getEmail());
 		if(info!=null) {
 			if((info.isIsverified()==true)&&(encrypt.matches(data.getPassword(), info.getPassword()))) {
 				System.out.println(generator.token(info.getUserId()));
 				return info;
 			}
+		}
+		}catch(Exception e) {
+			throw new UserException("no user existed with that  email");
 		}
 		return null;
 	}
@@ -86,12 +87,16 @@ public class ServiceImpl implements UserService{
 	@Override
 	@Transactional
 	public UserInfo forgotPassword(LoginDto data) {
+		try {
 		UserInfo info=repository.getUser(data.getEmail());
 		if(info!=null) {
 			BeanUtils.copyProperties(data, info);
 			info.setPassword(config.passwordEncoder().encode(info.getPassword()));
 			return repository.register(info);
         }
+		}catch(Exception e) {
+			throw new UserException("no user existed with that  email");
+		}
 		return null;
 	}
 	//to get all users
