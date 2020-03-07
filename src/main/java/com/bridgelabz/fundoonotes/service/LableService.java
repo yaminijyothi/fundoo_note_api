@@ -10,14 +10,17 @@ import com.bridgelabz.fundoonotes.model.Notes;
 public interface LableService {
 	
 	Lables createLable(LableDto data,String token);
-	Lables updateLable(LableDto data,String token,long lableId);
+	
 	Lables deleteLable(long LableId,String token);
+	
 	List<Lables> getAllLables();
+	
 	List<Lables> getLableByUserId(String token);
+	
 	Lables getLable(long LableId);
-//	List<Lables> notesOfLable(LableDto data, String token);
-//	Notes addNotesToLable(String token, long lableId, NoteDto data);
+	
 	Lables addLable(long lableId, long noteId, String token);
+	
 	List<Notes> getNotes(String token, long lableId);
 
 }
