@@ -9,9 +9,16 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 @Entity
 @Data
+@AllArgsConstructor
+@ToString
+@NoArgsConstructor
 public class Notes {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -25,14 +32,14 @@ public class Notes {
 	private LocalDateTime dateAndTime;
 	private LocalDateTime updateDate;
 	private	LocalDateTime reminder;
-	
-	@ManyToOne
-	private UserInfo info;
-	
-	@ManyToMany(mappedBy="notesList")
-	private List<Lables> lable;
-	
-	
+//	
+//	@ManyToOne
+//	private UserInfo info;
+//	
+//	@ManyToMany(mappedBy="notesList")
+//	private List<Lables> lable;
+//	
+//	
 	
 	}
 
