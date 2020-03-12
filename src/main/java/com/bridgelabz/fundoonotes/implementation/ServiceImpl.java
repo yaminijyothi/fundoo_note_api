@@ -10,6 +10,8 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.http.HttpStatus;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -36,6 +38,8 @@ public class ServiceImpl implements UserService{
 	private JavaMailSenderImpl sender;
 	@Autowired
 	private UserConfiguration config;
+	@Autowired
+	private Environment environment;
 
 
 	//for user registration
@@ -70,7 +74,7 @@ public class ServiceImpl implements UserService{
 			}
 		}
 		}catch(Exception e) {
-			throw new UserException("no user existed with that  email");
+			throw new UserException(environment.getProperty("400"),HttpStatus.BAD_REQUEST);
 		}
 		return null;
 	}
@@ -95,7 +99,7 @@ public class ServiceImpl implements UserService{
 			return repository.register(info);
         }
 		}catch(Exception e) {
-			throw new UserException("no user existed with that  email");
+			throw new UserException(environment.getProperty("400"),HttpStatus.BAD_REQUEST);
 		}
 		return null;
 	}
@@ -122,6 +126,16 @@ public class ServiceImpl implements UserService{
 		return sender;
 
 	}
+	@Override
+	public UserInfo getUserById(String token) {
+		int userId=generator.jwt(token);
+		UserInfo info=repository.findUserById(userId);
+		if(info!=null) {
+			
+		}
+		return null;
+	}
+	
 		
 }
 	
