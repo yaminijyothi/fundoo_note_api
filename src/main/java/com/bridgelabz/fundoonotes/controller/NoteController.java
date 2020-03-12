@@ -43,7 +43,7 @@ public class NoteController {
 	// API for delete note
 	@DeleteMapping("/note/deletenote/{id}/{token}")
 	public ResponseEntity<StatusRes> delete(@PathVariable long id,@PathVariable("token") String token) {
-		Notes note =service.deleteNote(id, token);		
+		service.deleteNote(id, token);		
 		return ResponseEntity.status(HttpStatus.OK).body(new StatusRes("successfully deleted notes", 200));
 	}
 	//API for getting all notes
@@ -74,7 +74,7 @@ public class NoteController {
 	@PutMapping("note/wantToPin/{token}/{noteId}")
 	public ResponseEntity<StatusRes> pinned(@PathVariable("token")String token,@PathVariable("noteId")long noteId){
 		Notes note = service.pinned(token,noteId);
-		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new StatusRes("notes get pinned", 200));
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new StatusRes("notes get pinned", 200,note));
 
 	}
 	//API for getting pinned notes
@@ -102,10 +102,26 @@ public class NoteController {
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new StatusRes("colour added successfully", 200,note));
 
 	}
+	//API for notes sorting in ascending order
+	@GetMapping("note/ascendingSort")
+	public ResponseEntity<StatusRes> ascendingSort(){
+		List<String> list = service.ascendingSort();
+		if(list!=null) {
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new StatusRes("notes sorting in ascending", 200,list));
 
+	}
+		return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(new StatusRes("failed to sorting", 200,list));
 
+	}
+	//API for nptes sorting in descending order
+	@GetMapping("note/descendingSort")
+	public ResponseEntity<StatusRes> descendingSort(){
+		List<String> list = service.descendingSort();
+		if(list!=null) {
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new StatusRes("notes sorting in descending", 200,list));
 
+	}
+		return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(new StatusRes("failed to sorting", 200,list));
 
-
-
+	}
 }
