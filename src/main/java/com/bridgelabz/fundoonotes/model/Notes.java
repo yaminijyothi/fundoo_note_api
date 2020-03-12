@@ -33,5 +33,10 @@ public class Notes {
 	private LocalDateTime updateDate;
 	private	LocalDateTime reminder;
 	
+
+	@ManyToMany
+	private List<Lables> lable;
+	
+	
 	}
 
