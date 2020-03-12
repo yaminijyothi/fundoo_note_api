@@ -20,7 +20,9 @@ public interface LableService {
 	Lables getLable(long LableId);
 	
 	Lables addLable(long lableId, long noteId, String token);
-	
-	List<Notes> getNotes(String token, long lableId);
 
+	List<String> ascendingSort();
+
+	List<String> descendingSort();
+	
 }
