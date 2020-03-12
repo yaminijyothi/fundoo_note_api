@@ -93,6 +93,10 @@ public class UserController {
 			}
 			return	ResponseEntity.status(HttpStatus.ACCEPTED).body(new StatusRes("not verified",400)); 
 		}
+		@GetMapping("/hi")
+		public String hello() {
+			return "hi";
+		}
 
 		
 	}
