@@ -31,6 +31,10 @@ public interface NoteService {
 	Notes archieved(String token, long noteId);
 	
 	Notes addColour(String token, long noteId,String colour);
+
+	List<String> ascendingSort();
+
+	List<String> descendingSort();
 	
 }
 
