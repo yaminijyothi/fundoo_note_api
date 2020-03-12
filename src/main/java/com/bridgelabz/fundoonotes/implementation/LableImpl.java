@@ -1,12 +1,16 @@
 package com.bridgelabz.fundoonotes.implementation;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
 
 import com.bridgelabz.fundoonotes.dto.LableDto;
 import com.bridgelabz.fundoonotes.exception.UserException;
@@ -28,6 +32,8 @@ public class LableImpl implements LableService{
 	private LableRepository lableRepo;
 	@Autowired
 	private NoteRepository noteRepo;
+	@Autowired
+	private Environment environment;
 
 	//to create lables
 	@Override
@@ -40,12 +46,12 @@ public class LableImpl implements LableService{
 				Lables lab=new Lables();
 				BeanUtils.copyProperties(data, lab);
 				lab.setName(data.getName());
-				lab.setUserId(id);
+				info.getLables().add(lab);
 				Lables result = lableRepo.save(lab);
 				return result;
 			}
 		}catch(Exception e) {
-			throw new UserException("user does not exist with this id");
+			throw new UserException(environment.getProperty("400"),HttpStatus.BAD_REQUEST);
 		}
 		return null;
 	}
@@ -60,7 +66,7 @@ public class LableImpl implements LableService{
 				lableRepo.delete(lab);
 			}
 		}catch(Exception e) {
-			throw new UserException("lable does not exist with that id");
+			throw new UserException(environment.getProperty("400"),HttpStatus.BAD_REQUEST);
 		}
 		return null;
 	}
@@ -80,6 +86,7 @@ public class LableImpl implements LableService{
 	public List<Lables> getLableByUserId(String token) {
 		int id=generator.jwt(token);
 		List<Lables> lab=lableRepo.findLableByUserId(id);
+		//lab.forEach(lab::add);
 		return lab;
 	}
 
@@ -88,6 +95,7 @@ public class LableImpl implements LableService{
 	@Transactional
 	public Lables getLable(long LableId) {
 		Lables lab=lableRepo.findLableById(LableId);
+		
 		return lab;
 	}
 
@@ -102,29 +110,39 @@ public class LableImpl implements LableService{
 			try {
 				Notes notes =noteRepo.findNoteById(noteId);
 				Lables lable=lableRepo.findLableById(lableId);
-				lable.getNotesList().add(notes);
+				notes.getLable().add(lable);
 				lableRepo.save(lable); 
 				return lable;
 			}catch(Exception e) {
-				throw new UserException("lable is not exist with that id");
+				throw new UserException(environment.getProperty("400"),HttpStatus.BAD_REQUEST);
 			}
 		}
 		return null;
 	}
-
-	// getting notes by lable id
+	//lables sorting in ascending order
 	@Override
 	@Transactional
-	public List<Notes> getNotes(String token, long lableId) {
-		int id=generator.jwt(token);
-		UserInfo info=repository.findUserById(id);
-		if(info!=null) {
-			Lables lable=lableRepo.findLableById(lableId);
-			if(lable!=null) {
-				List<Notes> notes=lableRepo.getAllNotes(lableId);
-				return notes;
-			}
-		}
-		return null;
+	public List<String> ascendingSort() {
+		List<String> list=new ArrayList<>();
+		List<Lables> lables=getAllLables();
+		lables.forEach(data->{
+			list.add(data.getName());
+		});
+		Collections.sort(list);
+		return list;
+	}
+	//lables sorting in descending order
+	@Override
+	@Transactional
+	public List<String> descendingSort() {
+
+		List<String> list=new ArrayList<>();
+		List<Lables> lables=getAllLables();
+		lables.forEach(data->{
+			list.add(data.getName());
+		});
+		Collections.reverse(list);
+		return list;
+
 	}
 }
