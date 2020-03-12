@@ -39,7 +39,6 @@ public class UserInfo {
 	private LocalDateTime date;	
 
 	@ManyToMany
-	@JoinTable(name="user_collaborator",joinColumns = {@JoinColumn(name="user_id")},inverseJoinColumns = {@JoinColumn(name="collaborator_note_id")})
 	private List<Notes> collabratorNote;
 
 	@OneToMany(targetEntity = Notes.class,cascade = CascadeType.ALL)
