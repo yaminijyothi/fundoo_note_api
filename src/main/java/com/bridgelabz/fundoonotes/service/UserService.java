@@ -20,4 +20,6 @@ public interface UserService {
 
 	List<UserInfo> users();
 
+	public UserInfo getUserById(String token);
+
 }
