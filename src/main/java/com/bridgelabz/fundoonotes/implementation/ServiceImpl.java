@@ -131,7 +131,7 @@ public class ServiceImpl implements UserService{
 		int userId=generator.jwt(token);
 		UserInfo info=repository.findUserById(userId);
 		if(info!=null) {
-			
+			return info;
 		}
 		return null;
 	}
