@@ -2,17 +2,20 @@ package com.bridgelabz.fundoonotes.implementation;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javax.transaction.Transactional;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.bridgelabz.fundoonotes.dto.NoteDto;
 import com.bridgelabz.fundoonotes.dto.NoteUpdate;
 import com.bridgelabz.fundoonotes.exception.UserException;
+import com.bridgelabz.fundoonotes.model.Lables;
 import com.bridgelabz.fundoonotes.model.Notes;
 import com.bridgelabz.fundoonotes.model.UserInfo;
 import com.bridgelabz.fundoonotes.repository.NoteRepository;
@@ -20,6 +23,7 @@ import com.bridgelabz.fundoonotes.repository.UserRepository;
 import com.bridgelabz.fundoonotes.service.NoteService;
 import com.bridgelabz.fundoonotes.utility.TokenGenerator;
 @Service
+
 public class NoteImpl implements NoteService{
 	@Autowired
 	private NoteRepository noterepository;
@@ -27,7 +31,9 @@ public class NoteImpl implements NoteService{
 	private UserRepository repository;
 	@Autowired
 	private TokenGenerator generator;
-
+	@Autowired
+	private Environment environment;
+	
 	//to add notes
 	@Override
 	@Transactional
@@ -50,7 +56,7 @@ public class NoteImpl implements NoteService{
 				return result;
 			}
 		}catch(Exception e) {
-			throw new UserException("user does not exist with that id");
+			throw new UserException(environment.getProperty("400"),HttpStatus.BAD_REQUEST);
 		}
 		return null;
 	}
@@ -77,7 +83,7 @@ public class NoteImpl implements NoteService{
 				}
 			}
 		}catch(Exception e) {
-			throw new UserException("user does not exist");
+			throw new UserException(environment.getProperty("400"),HttpStatus.BAD_REQUEST);
 		}
 		return null;
 	}
@@ -119,7 +125,7 @@ public class NoteImpl implements NoteService{
 				return note;
 			}
 		}catch(Exception e) {
-			throw new UserException("user does not exist");
+			throw new UserException( environment.getProperty("400"),HttpStatus.BAD_REQUEST);
 		}
 		return null;
 
@@ -133,7 +139,7 @@ public class NoteImpl implements NoteService{
 			Notes note=noterepository.findNoteById(noteId);
 			return note;
 		}catch(Exception e) {
-			throw new UserException("no notes is there with that id");
+			throw new UserException(environment.getProperty("400"),HttpStatus.BAD_REQUEST);
 		}
 	}
 	//getting trashed notes
@@ -148,7 +154,7 @@ public class NoteImpl implements NoteService{
 				return list;
 			}
 		}catch(Exception e) {
-			throw new UserException("trashed notes does not exist");
+			throw new UserException(environment.getProperty("400"),HttpStatus.BAD_REQUEST);
 		}
 		return null;
 	}
@@ -168,7 +174,7 @@ public class NoteImpl implements NoteService{
 				}
 			}
 		}catch(Exception e) {
-			throw new UserException("user does not exist");
+			throw new UserException(environment.getProperty("400"),HttpStatus.BAD_REQUEST);
 		}
 		return null;
 	}
@@ -187,7 +193,7 @@ public class NoteImpl implements NoteService{
 				}	
 			}
 		}catch(Exception e) {
-			throw new UserException("user does not exist");
+			throw new UserException(environment.getProperty("400"),HttpStatus.BAD_REQUEST);
 		}
 		return null;
 	}
@@ -206,7 +212,7 @@ public class NoteImpl implements NoteService{
 				}	
 			}
 		}catch(Exception e) {
-			throw new UserException("user does nott exist");
+			throw new UserException(environment.getProperty("400"),HttpStatus.BAD_REQUEST);
 		}
 		return null;
 	}
@@ -226,7 +232,7 @@ public class NoteImpl implements NoteService{
 				}
 			}
 		}catch(Exception e) {
-			throw new UserException("user does not existed");
+			throw new UserException(environment.getProperty("400"),HttpStatus.BAD_REQUEST);
 		}
 		return null;
 	}
@@ -246,9 +252,34 @@ public class NoteImpl implements NoteService{
 				}
 			}
 		}catch(Exception e) {
-			throw new UserException("user does not exist");
+			throw new UserException(environment.getProperty("400"),HttpStatus.BAD_REQUEST);
 		}
 		return null;
+	}
+	//sorting notes in ascending 
+	@Override
+	@Transactional
+	public List<String> ascendingSort() {
+		List<String> list=new ArrayList<>();
+		List<Notes> lables=getAllNotes();
+		lables.forEach(data->{
+			list.add(data.getTitle());
+		});
+		Collections.sort(list);
+		return list;
+	
+	}
+	//sorting notes in descending 
+	@Override
+	@Transactional
+	public List<String> descendingSort() {
+		List<String> list=new ArrayList<>();
+		List<Notes> lables=getAllNotes();
+		lables.forEach(data->{
+			list.add(data.getTitle());
+		});
+		Collections.reverse(list);
+		return list;
 	}
 }
 
