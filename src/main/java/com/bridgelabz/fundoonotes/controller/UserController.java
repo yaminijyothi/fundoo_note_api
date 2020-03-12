@@ -53,7 +53,7 @@ public class UserController {
      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new UserDetailResponse(null,"failed to login 400",data));
 	}
 
-	//API for verify token 
+	//API for verify token                           
 	@GetMapping("/verify/{token}")
 	public ResponseEntity<StatusRes> verify(@PathVariable("token") String token){
 		boolean ver=service.verify(token);
@@ -83,6 +83,17 @@ public class UserController {
 		return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).body(new StatusRes("password is not changed", 400,data));
 
 	}
+	//API for verify token 
+		@GetMapping("/getUserById/{token}")
+		public ResponseEntity<StatusRes>getUserById(@PathVariable("token") String token){
+			UserInfo info=service.getUserById(token);
+			if(info!=null) 
+			{
+				return ResponseEntity.status(HttpStatus.ACCEPTED).body(new StatusRes("verified",200,info));
+			}
+			return	ResponseEntity.status(HttpStatus.ACCEPTED).body(new StatusRes("not verified",400)); 
+		}
+
 		
 	}
 
