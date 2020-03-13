@@ -1,0 +1,22 @@
+{"properties": [
+  {
+    "name": "spring-datasourc.driver-class-name",
+    "type": "java.lang.String",
+    "description": "A description for 'spring-datasourc.driver-class-name'"
+  },
+  {
+    "name": "spring-datasource-username",
+    "type": "java.lang.String",
+    "description": "A description for 'spring-datasource-username'"
+  },
+  {
+    "name": "spring-datasource-password",
+    "type": "java.lang.String",
+    "description": "A description for 'spring-datasource-password'"
+  },
+  {
+    "name": "spring-datasource-url",
+    "type": "java.lang.String",
+    "description": "A description for 'spring-datasource-url'"
+  }
+]}
