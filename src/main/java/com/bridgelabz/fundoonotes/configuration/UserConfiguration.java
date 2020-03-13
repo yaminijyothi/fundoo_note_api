@@ -1,6 +1,4 @@
 package com.bridgelabz.fundoonotes.configuration;
-/*user configuration for encryptpassword,modelmapper,javamailsender*/
-import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
