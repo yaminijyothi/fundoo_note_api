@@ -126,7 +126,9 @@ public class ServiceImpl implements UserService{
 		return sender;
 
 	}
+	//getting user by id
 	@Override
+	@Transactional
 	public UserInfo getUserById(String token) {
 		int userId=generator.jwt(token);
 		UserInfo info=repository.findUserById(userId);
