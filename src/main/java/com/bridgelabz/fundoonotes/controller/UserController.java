@@ -61,8 +61,8 @@ public class UserController {
 		{
 			return ResponseEntity.status(HttpStatus.ACCEPTED).body(new StatusRes("verified",200,ver));
 		}
-		return	ResponseEntity.status(HttpStatus.ACCEPTED).body(new StatusRes("not verified",400)); 
-	}
+		return	ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new StatusRes("not verified",400)); 
+   }
 
 
 	// API for getting all users
@@ -80,7 +80,7 @@ public class UserController {
 		if(info!=null) {
 			return ResponseEntity.status(HttpStatus.ACCEPTED).body(new StatusRes("password updated",200,data));
 		}
-		return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).body(new StatusRes("password is not changed", 400,data));
+		return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).body(new StatusRes("password is not updated", 400,data));
 
 	}
 	//API for verify token 
@@ -91,12 +91,12 @@ public class UserController {
 			{
 				return ResponseEntity.status(HttpStatus.ACCEPTED).body(new StatusRes("verified",200,info));
 			}
-			return	ResponseEntity.status(HttpStatus.ACCEPTED).body(new StatusRes("not verified",400)); 
+			return	ResponseEntity.status(HttpStatus.NOT_FOUND).body(new StatusRes("not verified",404)); 
 		}
-		@GetMapping("/hi")
-		public String hello() {
-			return "hi";
-		}
+//		@GetMapping("/hi")
+//		public String hello() {
+//			return "hi";
+//		}
 
 		
 	}
