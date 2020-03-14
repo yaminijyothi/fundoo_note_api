@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bridgelabz.fundoonotes.dto.ForgotDto;
 import com.bridgelabz.fundoonotes.dto.LoginDto;
 import com.bridgelabz.fundoonotes.dto.RegDto;
 import com.bridgelabz.fundoonotes.model.UserInfo;
@@ -75,7 +76,7 @@ public class UserController {
 
 	//API for forgotpassword
 	@PostMapping("/forgotpassword") 
-	public ResponseEntity<StatusRes> forgetPassword(@RequestBody LoginDto data){
+	public ResponseEntity<StatusRes> forgetPassword(@RequestBody ForgotDto data){
 		UserInfo info=service.forgotPassword(data);
 		if(info!=null) {
 			return ResponseEntity.status(HttpStatus.ACCEPTED).body(new StatusRes("password updated",200,data));
