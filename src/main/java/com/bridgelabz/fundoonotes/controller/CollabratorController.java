@@ -39,7 +39,6 @@ public class CollabratorController {
 	@GetMapping("collabrator/getAllCollabrators/{token}")
 	public ResponseEntity<StatusRes> getCollabrators(@PathVariable("token")String token){
 		List<Notes> note=service.getAllCollabrator(token);
-		System.out.print(note);
 		if(note!=null) {
 			return ResponseEntity.status(HttpStatus.ACCEPTED).body(new StatusRes("list of all collabrators",200,note));
 				}
