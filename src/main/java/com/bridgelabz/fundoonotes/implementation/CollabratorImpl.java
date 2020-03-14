@@ -33,18 +33,17 @@ public class CollabratorImpl implements CollabratorService{
 		int id= generator.jwt(token);
 		UserInfo col=repository.getUser(email);
 		if(col!=null) {
-
 			Optional<Notes> note=noteRepo.findById(noteId);
 			note.ifPresent(notes->{
 				col.getCollabratorNote().add(notes);
 				repository.register(col);
-				
+
 			});
 			return note;
 
 		}
 		return null;				
- 
+
 
 
 	}
