@@ -17,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.bridgelabz.fundoonotes.configuration.UserConfiguration;
+import com.bridgelabz.fundoonotes.dto.ForgotDto;
 import com.bridgelabz.fundoonotes.dto.LoginDto;
 import com.bridgelabz.fundoonotes.dto.RegDto;
 import com.bridgelabz.fundoonotes.exception.UserException;
@@ -40,6 +41,8 @@ public class ServiceImpl implements UserService{
 	private UserConfiguration config;
 	@Autowired
 	private Environment environment;
+	@Autowired
+	private RabitMQSender rabbitMQSender;
 
 
 	//for user registration
@@ -47,13 +50,14 @@ public class ServiceImpl implements UserService{
 	public UserInfo register(RegDto data) {
 		UserInfo user = repository.getUser(data.getEmail());
 		if(user==null) {
-		UserInfo info=new UserInfo();
+			UserInfo info=new UserInfo();
 			BeanUtils.copyProperties(data,info);
 			info.setDate(LocalDateTime.now());
 			String enpassword=encrypt.encode(data.getPassword());    
 			info.setPassword(enpassword);
 			info.setIsverified(false);
 			UserInfo result = repository.register(info);
+			rabbitMQSender.send(info);
 			JavaMailSenderImpl mail = this.mailSender();
 			Mail.sending(info,mail, generator.token(info.getUserId()));
 			System.out.println(generator.token(info.getUserId()));
@@ -66,19 +70,19 @@ public class ServiceImpl implements UserService{
 	@Transactional
 	public UserInfo login(LoginDto data) {
 		try {
-		UserInfo info=repository.getUser(data.getEmail());
-		if(info!=null) {
-			if((info.isIsverified()==true)&&(encrypt.matches(data.getPassword(), info.getPassword()))) {
-				System.out.println(generator.token(info.getUserId()));
-				return info;
+			UserInfo info=repository.getUser(data.getEmail());
+			if(info!=null) {
+				if((info.isIsverified()==true)&&(encrypt.matches(data.getPassword(), info.getPassword()))) {
+					System.out.println(generator.token(info.getUserId()));
+					return info;
+				}
 			}
-		}
 		}catch(Exception e) {
 			throw new UserException(environment.getProperty("400"),HttpStatus.BAD_REQUEST);
 		}
 		return null;
 	}
-	
+
 	//to verify user by using token
 	@Override
 	@Transactional
@@ -87,32 +91,34 @@ public class ServiceImpl implements UserService{
 		repository.verify(userId);
 		return true;
 	}
+
 	//to reset the password(forgotpassword)
 	@Override
 	@Transactional
-	public UserInfo forgotPassword(LoginDto data) {
+	public UserInfo forgotPassword(ForgotDto data) {
 		try {
-		UserInfo info=repository.getUser(data.getEmail());
-		if(info!=null) {
-			BeanUtils.copyProperties(data, info);
-			info.setPassword(config.passwordEncoder().encode(info.getPassword()));
-			return repository.register(info);
-        }
+			UserInfo info=repository.getUser(data.getEmail());
+			if(info!=null) {
+				BeanUtils.copyProperties(data, info);
+				info.setPassword(encrypt.encode(data.getNewpassword()));
+				return repository.register(info);
+			}
 		}catch(Exception e) {
 			throw new UserException(environment.getProperty("400"),HttpStatus.BAD_REQUEST);
 		}
 		return null;
+
 	}
 	//to get all users
 	@Override
 	public List<UserInfo> users() {
 		List<UserInfo> users=repository.users(); 
 		return users;
-	
-	}
-	
 
-   //**propertyfile to send mail 
+	}
+
+
+	//**propertyfile to send mail 
 	public JavaMailSenderImpl mailSender() {
 		sender.setUsername(System.getenv("email"));
 		sender.setPassword(System.getenv("password"));	
@@ -137,10 +143,11 @@ public class ServiceImpl implements UserService{
 		}
 		return null;
 	}
-	
-		
+
+
+
 }
-	
+
 
 
 
