@@ -1,23 +1,30 @@
 package com.bridgelabz.fundoonotes.controller;
+import java.util.HashMap;
 /*
  * purpose:implementing rest controller for login,registration and forgot password
  * Filename:UserController.java
  * author:yamini
  * */
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.bridgelabz.fundoonotes.dto.ForgotDto;
 import com.bridgelabz.fundoonotes.dto.LoginDto;
 import com.bridgelabz.fundoonotes.dto.RegDto;
+import com.bridgelabz.fundoonotes.implementation.AmazonS3ClientServiceImpl;
 import com.bridgelabz.fundoonotes.model.UserInfo;
 import com.bridgelabz.fundoonotes.response.StatusRes;
 import com.bridgelabz.fundoonotes.response.UserDetailResponse;
@@ -31,7 +38,9 @@ public class UserController {
 	private UserService service;
 	@Autowired                             
 	private TokenGenerator generator;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
-
+	@Autowired
+    private AmazonS3ClientServiceImpl amazonS3ClientService;
+    
 	// API for register
 	@PostMapping("/register")
 	public ResponseEntity<StatusRes> register(@RequestBody RegDto data) {
@@ -94,10 +103,33 @@ public class UserController {
 			}
 			return	ResponseEntity.status(HttpStatus.NOT_FOUND).body(new StatusRes("not verified",404)); 
 		}
+		//upload file
+	    @PostMapping("/file/upload")
+	    public Map<String, String> uploadFile(@RequestPart(value = "file") MultipartFile file)
+	    {
+	        this.amazonS3ClientService.uploadFileToS3Bucket(file, true);
+
+	        Map<String, String> response = new HashMap<>();
+	        response.put("message", "file [" + file.getOriginalFilename() + "] uploading request submitted successfully.");
+
+	        return response;
+	    }
+
+	    @DeleteMapping("file/remove")
+	    public Map<String, String> deleteFile(@RequestParam("file_name") String fileName)
+	    {
+	        this.amazonS3ClientService.deleteFileFromS3Bucket(fileName);
+
+	        Map<String, String> response = new HashMap<>();
+	        response.put("message", "file [" + fileName + "] removing request submitted successfully.");
+
+	        return response;
+	    }
 //		@GetMapping("/hi")
 //		public String hello() {
 //			return "hi";
 //		}
+		
 
 		
 	}
